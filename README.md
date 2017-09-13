@@ -1,4 +1,4 @@
-#EVA16 font
+# EVA16 font
 
   European Voynich Alphabet font (eva16.mf) by Akinori Ito
   based on Voynich Currier 16 pt (voycur16.mf) 
