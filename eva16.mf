@@ -1,0 +1,789 @@
+%
+%  European Voynich Alphabet font (eva16.mf)
+%  based on Voynich Currier 16 pt (voycur16.mf) by Akinori Ito
+%  This file is in public domain.
+%
+%  The following description is from the original font voycur16.mf:
+%%  A simple METAFONT font for displaying the characters of the Voynich
+%%  manuscript according to the Currier transcription scheme, for use
+%%  with the TeX typesetting system.
+%%
+%%  Displayable characters are A-Z, 0-9 as well as '.' (separator)
+%%  and '*' (unreadable characters).  Only upper case characters are 
+%%  provided.
+%%
+%%  Developed by Bruce Grant (bgrant@umcc.ais.org) Jan., 1996
+%%  and placed in the public domain.
+%%
+mode_setup;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%NOTE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  For other font sizes, modify file name and change the following line
+  nominal_height#:=16pt#;          % nominal font size
+%
+%
+%
+  xpt#:=nominal_height#/16;        % "logical pt"
+  stroke_slant#:=1xpt#;            % slant for short vertical strokes
+  stk_space#:=2xpt#;               % spacing of consecutive strokes
+  x_unit#:=4xpt#;                  % vertical unit = 1/3 of max height
+				   % font ascends 3 units and descends
+				   %  one unit
+  o_space#:=1.25xpt#;              % space on each side of char
+  pen_width#:=xpt#;
+  define_pixels(stroke_slant,stk_space,x_unit,o_space,pen_width);
+
+  pickup pencircle xscaled 1.2pen_width yscaled 0.4pen_width rotated 30;
+  mypen.nib:=savepen;
+%
+%  Macro to draw a short vertical stroke 
+%
+def draw_stroke(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+stroke_slant; y$b=0;
+  draw z$a--z$b;
+enddef;
+%
+%  Macro to draw the hook used in Voynich character "D"
+%
+def draw_voynich_d(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+stroke_slant; y$b=0;
+  x$c=x_orig+stroke_slant+.75x_unit; y$c=1.5x_unit;
+  x$d=x_orig+stroke_slant+.375x_unit; y$d=2x_unit;
+  x$e=x_orig+stroke_slant+.125x_unit; y$e=1.75x_unit;
+  draw z$a--z$b..z$c..z$d..z$e;
+enddef;
+%
+%  Macro to draw the hook used in Voynich character "R"
+%
+def draw_voynich_r(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+stroke_slant; y$b=0;
+  x$c=x_orig+.25x_unit; y$c=1.8x_unit;
+  x$d=x_orig+.5x_unit; y$d=2x_unit;
+  x$e=x_orig+.75x_unit; y$e=1.75x_unit;
+  z$f=.25[z$a,z$b];
+  draw z$a--z$f--z$b;
+  draw z$c..z$d..z$e..z$f;
+enddef;
+%
+%  Macro to draw the loop used in Voynich character "J"
+%
+def draw_voynich_j(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+stroke_slant; y$b=0;
+  x$c=x_orig+1.25x_unit; y$c=1.75x_unit;
+  x$d=x_orig+1.0x_unit; y$d=2x_unit;
+  x$e=x_orig+0.75x_unit; y$e=.75x_unit;
+  x$f=x_orig+0.225x_unit; y$f=-0.75x_unit;
+  draw z$b--z$a{right}..z$c..z$d..z$e..z$f;
+enddef;
+%
+%  Macro to draw the loop used in Voynich character "E"
+%
+def draw_voynich_e(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=-.5x_unit;
+  x$c=x_orig+x_unit; y$c=1.2x_unit;
+  x$d=x_orig; y$d=.9x_unit;
+  x$b=x_orig+0.5x_unit; y$b=.2x_unit;
+  x$e=x_orig+.7x_unit; y$e=-0.2x_unit;
+  draw z$a--z$c..z$d..z$b..z$e;
+enddef;
+%
+%  Macro to draw the loop used in Voynich character "S"
+%
+def draw_voynich_s(suffix $)(expr x_orig, x_len) =
+  x$a=x_orig+.5x_unit; y$a=0;
+  x$b=x_orig; y$b=.5x_unit;
+  x$c=x_orig+.5x_unit; y$c=x_unit;
+  x$d=x_orig+.5x_unit+x_len; y$d=x_unit;
+  x$e=x_orig+x_len; y$e=.5x_unit;
+  x$f=x_orig+.5x_unit+x_len; y$f=0;
+  draw z$a..z$b..z$c--z$d{left}..z$e..z$f;
+enddef;
+%
+%  Macro to draw the loop used in Voynich character "c"(EVA)
+%
+def draw_voynich_eva_c(suffix $)(expr x_orig, x_len) =
+  x$a=x_orig+.5x_unit; y$a=0;
+  x$b=x_orig; y$b=.5x_unit;
+  x$c=x_orig+.5x_unit; y$c=x_unit;
+  x$d=x_orig+.5x_unit+x_len; y$d=x_unit;
+  draw z$a..z$b..z$c--z$d;
+enddef;
+%
+%  Macro to draw the loop used in Voynich character "h"(EVA)
+%
+def draw_voynich_eva_h(suffix $)(expr x_orig, x_len, xx_len) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+xx_len; y$b=x_unit;
+  x$d=x_orig+x_len; y$d=x_unit;
+  x$e=x_orig-0.5x_unit+x_len; y$e=.5x_unit;
+  x$f=x_orig+x_len; y$f=0;
+  draw z$a--z$b;
+  draw z$d{left}..z$e..z$f;
+enddef;
+%
+%  Macro to draw the Voynich character "P"
+%
+def draw_voynich_p(suffix $)(expr x_orig) =
+  x$a=x_orig+.625x_unit; y$a=0;
+  x$b=x_orig+.625x_unit; y$b=2x_unit;
+  x$c=x_orig+.3125x_unit; y$c=3x_unit;
+  x$d=x_orig; y$d=2.5x_unit;
+  x$e=x_orig+1.375x_unit; y$e=2x_unit;
+  x$f=x_orig+2x_unit; y$f=2.5x_unit;
+  x$g=x_orig+1.6875x_unit; y$g=3x_unit;
+  x$h=x_orig+1.375x_unit; y$h=0;
+  draw z$a--z$b{up}..z$c..z$d..{right}z$b--z$e{right}..z$f..z$g..{down}z$e--z$h;
+enddef;
+%
+%  Macro to draw the Voynich character "F"
+%
+def draw_voynich_f(suffix $)(expr x_orig) =
+  x$a=x_orig; y$a=0;
+  x$b=x_orig; y$b=2.25x_unit;
+  x$c=x_orig; y$c=3x_unit;
+  x$d=x_orig+.75x_unit; y$d=2x_unit;
+  x$e=x_orig+1.5x_unit; y$e=2.5x_unit;
+  x$f=x_orig+1.125x_unit; y$f=3x_unit;
+  x$g=x_orig+.75x_unit;y$g=0;
+  draw z$a--z$b--z$c;
+  draw z$b..{right}z$d..z$e..z$f..{down}z$d--z$g;
+enddef;
+%
+%  Macro to draw the Voynich character "V"
+%
+def draw_voynich_v(suffix $)(expr x_orig) =
+  x$a=x_orig+.625x_unit; y$a=0;
+  x$b=x_orig+.625x_unit; y$b=2x_unit;
+  x$c=x_orig+.3125x_unit; y$c=3x_unit;
+  x$d=x_orig; y$d=2.5x_unit;
+  x$e=x_orig+1.375x_unit; y$e=2x_unit;
+  x$f=x_orig+2x_unit; y$f=2.5x_unit;
+  x$g=x_orig+1.6875x_unit; y$g=3x_unit;
+  x$h=x_orig+1.375x_unit; y$h=1.5x_unit;
+  x$i=x_orig+.125x_unit; y$i=1.7x_unit;
+  x$j=x_orig; y$j=1.5x_unit;
+  draw z$a--z$b{up}..z$c..z$d..{right}z$b--z$e{right}..z$f..z$g..{down}z$e..{left}z$h..z$i..z$j;
+enddef;
+%
+%  Macro to draw the Voynich character "B"
+%
+def draw_voynich_b(suffix $)(expr x_orig) =
+  x$a=x_orig+.5x_unit; y$a=0;
+  x$b=x_orig+.5x_unit; y$b=2.25x_unit;
+  x$c=x_orig+.5x_unit; y$c=3x_unit;
+  x$d=x_orig+1.25x_unit; y$d=2x_unit;
+  x$e=x_orig+2x_unit; y$e=2.5x_unit;
+  x$f=x_orig+1.625x_unit; y$f=3x_unit;
+  x$g=x_orig+1.25x_unit;y$g=1.5x_unit;
+  x$h=x_orig;y$h=1.7x_unit;
+  x$i=x_orig;y$i=1.5x_unit;
+  draw z$a--z$b--z$c;
+  draw z$b..{right}z$d..z$e..z$f..{down}z$d{down}..{left}z$g..z$h..z$i;
+enddef;
+
+%
+%  Macro to draw the horizontal line
+%
+def draw_voynich_horiz(suffix $)(expr x_orig)(expr x_len) =
+  x$a=x_orig; y$a=x_unit;
+  x$b=x_orig+x_len; y$b=x_unit;
+  draw z$a--z$b;
+enddef;
+%
+%  Character definitions: n  (Currier D)
+%
+beginchar("n",2o_space#+stroke_slant#+.75x_unit#,2x_unit#,0);
+  "The EVA letter n";
+  pickup mypen.nib;
+  draw_voynich_d(1,o_space);
+endchar;
+%
+%  Character definitions: r (Currier R)
+%
+beginchar("r",2o_space#+.75x_unit#,2x_unit#,0);
+  "The Voynich letter r";
+  pickup mypen.nib;
+  draw_voynich_r(1,o_space);
+endchar;
+%
+%  Character definitions: m (Currier J)
+%
+beginchar("m",2o_space#+1.25x_unit#,2x_unit#,.75x_unit#);
+  "The Voynich letter m";
+  pickup mypen.nib;
+  draw_voynich_j(1,o_space);
+endchar;
+%
+%  Character definitions: l (Currier E)
+%
+beginchar("l",2o_space#+x_unit#,1.5x_unit#,0.5x_unit#);
+  "The Voynich letter l";
+  pickup mypen.nib;
+  draw_voynich_e(1,o_space);
+endchar;
+%
+%  Characters t (Currier P)
+%
+beginchar("t",2o_space#+2.0x_unit#,3x_unit#,0);
+  "The Voynich letter t";
+  pickup mypen.nib;
+  draw_voynich_p(1,o_space);
+endchar;
+%
+%  Characters T (Currier P+horiz)
+%
+beginchar("T",2o_space#+2x_unit#,3x_unit#,0);
+  "The Voynich letter T";
+  pickup mypen.nib;
+  draw_voynich_p(1,o_space);
+  draw_voynich_horiz(2,o_space,2x_unit);
+endchar;
+%
+%  Characters k (Currier F)
+%
+beginchar("k",2o_space#+1.5x_unit#,3x_unit#,0);
+  "The Voynich letter k";
+  pickup mypen.nib;
+  draw_voynich_f(1,o_space);
+endchar;
+%
+%  Characters K (Currier F+horiz)
+%
+beginchar("K",2o_space#+1.5x_unit#,3x_unit#,0);
+  "The Voynich letter k";
+  pickup mypen.nib;
+  draw_voynich_f(1,o_space);
+  draw_voynich_horiz(2,o_space-0.5x_unit,2x_unit);
+endchar;
+%
+%  Characters p (Currier V)
+%
+beginchar("p",2o_space#+2.0x_unit#,3x_unit#,0);
+  "The Voynich letter f";
+  pickup mypen.nib;
+  draw_voynich_v(1,o_space);
+endchar;
+%
+%  Characters P (Currier V+horiz)
+%
+beginchar("P",2o_space#+2.0x_unit#,3x_unit#,0);
+  "The Voynich letter f";
+  pickup mypen.nib;
+  draw_voynich_v(1,o_space);
+  draw_voynich_horiz(2,o_space,2x_unit);
+endchar;
+%
+%  Characters f (Currier B)
+%
+beginchar("f",2o_space#+2x_unit#,3x_unit#,0);
+  "The Voynich letter p";
+  pickup mypen.nib;
+  draw_voynich_b(1,o_space);
+endchar;
+%
+%  Characters F (Currier B+horiz)
+%
+beginchar("F",2o_space#+2x_unit#,3x_unit#,0);
+  "The Voynich letter P";
+  pickup mypen.nib;
+  draw_voynich_b(1,o_space);
+  draw_voynich_horiz(2,o_space,2x_unit);
+endchar;
+%
+%  Character e (Currier C)
+%
+beginchar("e",2o_space#+.5x_unit#,x_unit#,0);
+  "The Voynich character e";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  draw z1a..z1b..z1c;
+endchar;
+%
+%  Character E (same as e)
+%
+beginchar("E",2o_space#+.5x_unit#,x_unit#,0);
+  "The Voynich character E";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  draw z1a..z1b..z1c;
+endchar;
+%
+%  Character c
+%
+beginchar("c",2o_space#+1.2x_unit#,x_unit#,0);
+  "The Voynich character c";
+  pickup mypen.nib;
+  draw_voynich_eva_c(1,o_space,.5x_unit);
+endchar;
+%
+%  Character h
+%
+beginchar("h",2o_space#+x_unit#,x_unit#,0);
+  "The Voynich character h";
+  pickup mypen.nib;
+  draw_voynich_eva_h(1,o_space,x_unit,x_unit);
+endchar;
+%
+%  Character H
+%
+beginchar("H",2o_space#+1.5x_unit#,x_unit#,0);
+  "The Voynich character h";
+  pickup mypen.nib;
+  draw_voynich_eva_h(1,o_space,x_unit,1.5x_unit);
+endchar;
+%
+%  Character s (Currier 2)
+%
+beginchar("s",2o_space#+x_unit#,2x_unit#,0);
+  "The Voynich letter s";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  x1d=o_space+x_unit; y1d=1.5x_unit;
+  x1e=o_space+.5x_unit; y1e=2x_unit;
+  x1f=o_space+.25x_unit; y1f=1.8x_unit;
+  draw z1a..z1b..{right}z1c{right}..z1d..z1e..z1f;
+endchar;
+%
+%  Character S
+%
+beginchar("S",2o_space#+1.8x_unit#,2x_unit#,0);
+  "The Voynich character S";
+  pickup mypen.nib;
+  x1a=o_space+x_unit; y1a=1.75x_unit;
+  x1b=o_space+1.375x_unit; y1b=2x_unit;
+  x1c=o_space+1.75x_unit; y1c=1.75x_unit;
+  x1d=o_space+.8x_unit; y1d=x_unit;
+  draw_voynich_eva_c(2,o_space,x_unit);
+  draw z1a..z1b..z1c--z1d;
+endchar;
+%
+%  Character o (Currier O)
+%
+beginchar("o",2o_space#+x_unit#,x_unit#,0);
+  "The Voynich character o";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  x1d=o_space+x_unit; y1d=.5x_unit;
+  draw z1a..z1b..z1c..z1d..cycle;
+endchar;
+%
+%  Character O (Currier O+horiz)
+%
+beginchar("O",2o_space#+x_unit#,x_unit#,0);
+  "The Voynich character O";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  x1d=o_space+x_unit; y1d=.5x_unit;
+  draw z1a..z1b..z1c..z1d..cycle;
+  draw_voynich_horiz(2,o_space,x_unit);
+endchar;
+%
+%  Character i (Currier I)
+%
+beginchar("i",2o_space#+.25x_unit#,x_unit#,0);
+  "The Voynich letter i";
+  pickup mypen.nib;
+  draw_stroke(1,o_space);
+endchar;
+%
+%  Character I (Currier I+horiz)
+%
+beginchar("I",2o_space#+.4x_unit#,x_unit#,0);
+  "The Voynich letter i";
+  pickup mypen.nib;
+  draw_stroke(1,o_space+.1x_unit);
+  draw_voynich_horiz(2,o_space,.4x_unit);
+endchar;
+%
+%  Character a (Currier A)
+%
+beginchar("a",2o_space#+1.25x_unit#,x_unit#,0);
+  "The Voynich letter a";
+  pickup mypen.nib;
+  x1a=o_space+1x_unit; y1a=.5x_unit;
+  x1b=o_space+.5x_unit; y1b=0;
+  x1c=o_space; y1c=.5x_unit;
+  x1d=o_space+.5x_unit; y1d=x_unit;
+  x1e=o_space+1.125x_unit; y1e=0;
+  draw z1a..z1b..z1c..z1d..z1a..{down}z1e;
+endchar;
+%
+%  Character A (Currier A+horiz)
+%
+beginchar("A",2o_space#+1.25x_unit#,x_unit#,0);
+  "The Voynich letter a";
+  pickup mypen.nib;
+  x1a=o_space+1x_unit; y1a=.5x_unit;
+  x1b=o_space+.5x_unit; y1b=0;
+  x1c=o_space; y1c=.5x_unit;
+  x1d=o_space+.5x_unit; y1d=x_unit;
+  x1e=o_space+1.125x_unit; y1e=0;
+  draw z1a..z1b..z1c..z1d..z1a..{down}z1e;
+  draw_voynich_horiz(2,o_space,1.25x_unit);
+endchar;
+%
+%
+%  Character q (Currier 4)
+%
+beginchar("q",2o_space#+1.5x_unit#,x_unit#,x_unit#);
+  "The Voynich character q";
+  pickup mypen.nib;
+  x1a=o_space+1.5x_unit; y1a=0;
+  x1b=o_space; y1b=0;
+  x1c=o_space+x_unit; y1c=x_unit;
+  x1d=o_space+x_unit; y1d=-x_unit;
+  draw z1a--z1b--z1c--z1d;
+endchar;
+%
+%  Character g (Currier 6)
+%
+beginchar("g",2o_space#+1.5x_unit#,2x_unit#,x_unit#);
+  "The Voynich letter g";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c = x_unit;
+  x1d=o_space+1.5x_unit; y1d=1.75x_unit;
+  x1e=o_space+1.25x_unit; y1e=2x_unit;
+  x1f=o_space+x_unit; y1f=.5x_unit;
+  x1g=o_space+0.5x_unit; y1g=-0.75x_unit;
+  draw z1a..z1b..z1c{right}..z1d..z1e..{down}z1f..z1g;
+endchar;
+%
+%  Character j (Currier 7)
+%
+beginchar("j",2o_space#+1.25x_unit#,2x_unit#,x_unit#);
+  "The Voynich letter j";
+  pickup mypen.nib;
+  x1a=o_space+.25x_unit; y1a=0;
+  x1b=o_space; y1b=.25x_unit;
+  x1c=o_space; y1c=x_unit;
+  x1d=o_space+1.25x_unit; y1d=1.75x_unit;
+  x1e=o_space+1.0x_unit; y1e=2x_unit;
+  x1f=o_space+0.75x_unit; y1f=.75x_unit;
+  x1g=o_space+0.225x_unit; y1g=-0.75x_unit;
+  draw z1a--z1b{up}--z1c{right}..z1d..z1e..z1f..z1g;
+endchar;
+%
+%  Character d (Currier 8)
+%
+beginchar("d",2o_space#+1.75x_unit#,2x_unit#,0);
+  "The Voynich character d";
+  pickup mypen.nib;
+  x1a=o_space+.375x_unit; y1a=0;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.875x_unit; y1c=x_unit;
+  x1d=o_space+1.75x_unit; y1d=1.5x_unit;
+  x1e=o_space+1.375x_unit; y1e=2x_unit;
+  x1f=o_space+.75x_unit; y1f=1.5x_unit;
+  x1g=o_space+x_unit; y1g=.5x_unit;
+  draw z1a..z1b..z1c..z1d..z1e..z1f..z1c..z1g..cycle;
+endchar;
+%
+%  Character y (Currier 9)
+%
+beginchar("y",2o_space#+.875x_unit#,x_unit#,x_unit#);
+  "The Voynich letter y";
+  pickup mypen.nib;
+  x1a=o_space+.6875x_unit; y1a=.0625x_unit;
+  x1b=o_space+.375x_unit; y1b=0;
+  x1c=o_space; y1c=.5x_unit;
+  x1d=o_space+.5625x_unit; y1d=x_unit;
+  x1e=o_space+.8125x_unit; y1e=.75x_unit;
+  x1f=o_space; y1f=-x_unit;
+  draw z1a..z1b..z1c..z1d..z1e..z1a..z1f;
+endchar;
+%
+%  Character Y (Currier 9+horiz)
+%
+beginchar("Y",2o_space#+x_unit#,x_unit#,x_unit#);
+  "The Voynich letter y";
+  pickup mypen.nib;
+  x1a=o_space+.6875x_unit; y1a=.0625x_unit;
+  x1b=o_space+.375x_unit; y1b=0;
+  x1c=o_space; y1c=.5x_unit;
+  x1d=o_space+.5625x_unit; y1d=x_unit;
+  x1e=o_space+.8125x_unit; y1e=.75x_unit;
+  x1f=o_space; y1f=-x_unit;
+  draw z1a..z1b..z1c..z1d..z1e..z1a..z1f;
+  draw_voynich_horiz(2,o_space,x_unit);
+endchar;
+%
+%  Character b
+%
+beginchar("b",2o_space#+1.2x_unit#,2x_unit#,0);
+  "The Voynich letter b";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=x_unit;
+  x1b=o_space; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=0;
+  x1d=o_space+1.2x_unit; y1d=x_unit;
+  x1e=o_space+1.2x_unit; y1e=1.5x_unit;
+  x1f=o_space+.375x_unit; y1f=2x_unit;
+  x1g=o_space+.125x_unit; y1g=1.75x_unit;
+  draw z1a..z1b..z1c..z1d..z1e..z1f..z1g;
+endchar;
+%
+%  Character u
+%
+beginchar("u",2o_space#+1.7x_unit#,2x_unit#,0);
+  "The Voynich letter u";
+  pickup mypen.nib;
+  x1a=o_space+1x_unit; y1a=.5x_unit;
+  x1b=o_space+.5x_unit; y1b=0;
+  x1c=o_space; y1c=.5x_unit;
+  x1d=o_space+.5x_unit; y1d=x_unit;
+  x1e=o_space+1.125x_unit; y1e=0;
+  x1f=o_space+1.7x_unit; y1f=x_unit;
+  x1g=o_space+1.7x_unit; y1g=1.5x_unit;
+  x1h=o_space+x_unit; y1h=2x_unit;
+  x1i=o_space+.5x_unit; y1i=1.75x_unit;
+  draw z1a..z1b..z1c..z1d..z1a..z1e..z1f..z1g..z1h..z1i;
+endchar;
+%
+%  Character u
+%
+beginchar("v",2o_space#+x_unit#,x_unit#,0);
+  "The Voynich letter v";
+  pickup mypen.nib;
+  x1a=o_space; y1a=0;
+  x1b=o_space+.5x_unit; y1b=x_unit;
+  x1c=o_space+x_unit; y1c=0;
+  draw z1a--z1b--z1c;
+endchar;
+%
+%  Character x
+%
+beginchar("x",2o_space#+x_unit#,x_unit#,0);
+  "The Voynich letter x";
+  pickup mypen.nib;
+  x1a=o_space; y1a=0;
+  x1b=o_space+.5x_unit; y1b=x_unit;
+  x1c=o_space+x_unit; y1c=0;
+  draw z1a--z1b--z1c;
+  draw_voynich_horiz(2,o_space,x_unit);
+endchar;
+%
+%  Character z
+%
+beginchar("z",2o_space#+x_unit#,1.7x_unit#,0);
+  "The Voynich letter z";
+  pickup mypen.nib;
+  x1a=o_space;y1a=0;
+  x1b=o_space;y1b=x_unit;
+  draw z1a--z1b;
+  x1c=o_space+.65x_unit; y1c=x_unit;
+  x1d=o_space+x_unit; y1d=1.2x_unit;
+  x1e=o_space+.82x_unit; y1e=1.7x_unit;
+  x1f=o_space+.65x_unit; y1f=0;
+  draw z1b--z1c..z1d..z1e..{up}z1c--z1f;
+endchar;
+%
+%  Character '
+%
+beginchar("'",2o_space#+0.4x_unit#,3x_unit#,0);
+  "The Voynich letter '";
+  pickup mypen.nib;
+  x1a=o_space+0.1x_unit; y1a=2.5x_unit;
+  x1b=o_space+0.25x_unit; y1b=3x_unit;
+  x1c=o_space+0.4x_unit; y1c=2.5x_unit;
+  x1d=o_space; y1d=1.8x_unit;
+  draw z1a..z1b..z1c..z1d;
+endchar;
+%
+%  Character 138 (inverse of s)
+%
+beginchar(138,2o_space#+x_unit#,2x_unit#,0);
+  "The Voynich letter 138";
+  pickup mypen.nib;
+  x1a=o_space+.5x_unit; y1a=0;
+  x1b=o_space+x_unit; y1b=.5x_unit;
+  x1c=o_space+.5x_unit; y1c=x_unit;
+  x1d=o_space; y1d=1.5x_unit;
+  x1e=o_space+.5x_unit; y1e=2x_unit;
+  x1f=o_space+.75x_unit; y1f=1.8x_unit;
+  draw z1a..z1b..{left}z1c{left}..z1d..z1e..z1f;
+endchar;
+%
+%  Character *
+%
+beginchar("*",2o_space#+x_unit#,2.5x_unit#,0);
+  "The Voynich letter *";
+  pickup mypen.nib;
+  x1a=o_space; y1a=0;
+  x1b=o_space; y1b=2.5x_unit;
+  x1c=o_space+x_unit; y1c=2.5x_unit;
+  x1d=o_space+x_unit; y1d=0;
+  draw z1a--z1b--z1c--z1d--cycle;
+endchar;
+%
+%  Character .
+%
+beginchar(".",2o_space#+2pen_width#+x_unit#,x_unit#,0);
+  "The Voynich letter .";
+  pickup pencircle scaled 2pen_width;
+  x1a=o_space+.5x_unit+pen_width; y1a=0;
+  draw z1a;
+endchar;
+%
+%  Doodle \/
+%         ~~
+beginchar(252,2o_space#+4x_unit#,3.2x_unit#,0.2x_unit#);
+  "Doodle #252";
+  pickup pencircle xscaled pen_width yscaled 3pen_width rotated 330;
+  x1a=o_space;y1a=0;
+  x1b=o_space+4x_unit;y1b=0;
+  draw z1a--z1b;
+  x1c=o_space+2x_unit;y1c=0;
+  x1d=o_space+1.6x_unit;y1d=1.5x_unit;
+  x1e=o_space;y1e=3x_unit;
+  draw z1c..z1d..{left}z1e;
+  x1f=o_space+2.4x_unit;y1f=1.5x_unit;
+  x1g=o_space+4x_unit;y1g=3x_unit;
+  draw z1c..z1f..{right}z1g;
+endchar;
+%         $
+%  Doodle \/
+%         ~~
+beginchar(253,2o_space#+3x_unit#,3.7x_unit#,0.2x_unit#);
+  "Doodle #253";
+  pickup pencircle xscaled pen_width yscaled 3pen_width rotated 330;
+  x1a=o_space;y1a=0;
+  x1b=o_space+3x_unit;y1b=0;
+  draw z1a--z1b;
+  x1c=o_space+x_unit;y1c=0;
+  x1d=o_space+x_unit;y1d=1.5x_unit;
+  x1e=o_space;y1e=2x_unit;
+  draw z1c..z1d..{left}z1e;
+  x1f=o_space+2x_unit;y1f=0;
+  x1g=o_space+2x_unit;y1g=1.5x_unit;
+  x1h=o_space+3x_unit;y1h=2x_unit;
+  draw z1f..z1g..{right}z1h;
+  pickup mypen.nib;
+  x1i=o_space+1.5x_unit; y1i=2x_unit;
+  x1j=o_space+2x_unit; y1j=2.2x_unit;
+  x1k=o_space+.7x_unit; y1k=2.8x_unit;
+  x1l=o_space+1.6x_unit; y1l=3.2x_unit;
+  x1m=o_space+1.5x_unit; y1m=3.5x_unit;
+  draw z1i..z1j..z1k..z1l..{down}z1m;
+endchar;
+%
+%  Kerning information to make words with tall characters look better
+%
+ligtable "f": "p":
+"d" kern -.2x_unit,
+"g" kern -.2x_unit,
+"m" kern -.2x_unit,
+"j" kern -.2x_unit,
+"y" kern -.2x_unit,
+"s" kern -.15x_unit,
+"S" kern -.15x_unit,
+"c" kern -.2x_unit,
+"e" kern -.2x_unit,
+"o" kern -.2x_unit,
+"a" kern -.2x_unit;
+ligtable "t": "k":
+"d" kern -.12x_unit,
+"g" kern -.12x_unit,
+"m" kern -.12x_unit,
+"j" kern -.12x_unit,
+"y" kern -.12x_unit,
+"s" kern -.12x_unit,
+"S" kern -.12x_unit,
+"e" kern -.12x_unit,
+"c" kern -.12x_unit,
+"o" kern -.12x_unit,
+"a" kern -.12x_unit;
+ligtable "F": "P":
+"h" kern -.25x_unit,
+"H" kern -.2x_unit,
+"x" kern -.2x_unit,
+"Y" kern -.2x_unit,
+"I" kern -.2x_unit,
+"O" kern -.2x_unit,
+"A" kern -.2x_unit;
+ligtable "T": "K":
+"h" kern -.15x_unit,
+"H" kern -.12x_unit,
+"x" kern -.12x_unit,
+"I" kern -.12x_unit,
+"Y" kern -.12x_unit,
+"O" kern -.12x_unit,
+"A" kern -.12x_unit;
+ligtable "l": "r": "s": "q":
+"d" kern -.05x_unit,
+"g" kern -.05x_unit,
+"m" kern -.05x_unit,
+"j" kern -.05x_unit,
+"y" kern -.05x_unit,
+"o" kern -.05x_unit,
+"a" kern -.05x_unit;
+ligtable "d": "g": "m": "j":
+"d" kern -.1x_unit,
+"g" kern -.1x_unit,
+"m" kern -.1x_unit,
+"j" kern -.1x_unit,
+"n" kern -.05x_unit,
+"r" kern -.05x_unit,
+"i" kern -.05x_unit,
+"e" kern -.1x_unit,
+"c" kern -.1x_unit,
+"y" kern -.1x_unit,
+"o" kern -.1x_unit,
+"a" kern -.1x_unit;
+ligtable "a": "o":
+"r" kern -.02x_unit,
+"m" kern -.05x_unit,
+"n" kern -.05x_unit,
+"i" kern -.03x_unit,
+"l" kern -.02x_unit,
+"f" kern -.1x_unit,
+"p" kern -.15x_unit,
+"k" kern -.02x_unit,
+"t" kern -.12x_unit;
+ligtable "A": "O":
+"I" kern -.07x_unit,
+"F" kern -.1x_unit,
+"P" kern -.15x_unit,
+"K" kern -.02x_unit,
+"T" kern -.15x_unit;
+ligtable "c": "S": "h":
+"a" kern -.05x_unit,
+"o" kern -.05x_unit,
+"y" kern -.05x_unit,
+"F" kern -.17x_unit,
+"P" kern -.17x_unit,
+"T" kern -.17x_unit,
+"K" kern -.12x_unit,
+"h" kern -.2x_unit,
+"O" kern -.1x_unit,
+"A" kern -.1x_unit;
+ligtable  "H": "I": "x":
+"F" kern -.12x_unit,
+"P" kern -.12x_unit,
+"T" kern -.12x_unit,
+"K" kern -.12x_unit,
+"h" kern -.12x_unit,
+"A" kern -.07x_unit;
+ligtable "i":
+"i" kern -.02x_unit,
+"n" kern -.02x_unit,
+"r" kern -.02x_unit,
+"g" kern -.02x_unit,
+"m" kern -.02x_unit;
+
+end.

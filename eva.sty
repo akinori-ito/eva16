@@ -1,0 +1,16 @@
+%
+% Style file for EVA font
+%
+\font\evafont=eva16
+\font\evafontsmall=eva16 scaled 500
+\font\evafontlarge=eva16 scaled 1414
+\font\evafontLarge=eva16 scaled 2000
+\def\evacmd#1{\spaceskip=3pt plus 20pt minus 2pt\relax#1}
+\def\eva{\evacmd{\evafont}}
+\let\evanormal=\eva
+\def\evasmall{\evacmd{\evafontsmall}}
+\def\evalarge{\evacmd{\evafontlarge}}
+\def\evaLarge{\evacmd{\evafontLarge}}
+\chardef\revs="8A    % reverse S
+\chardef\doodleA="FC %'252
+\chardef\doodleB="FD %'252
